@@ -4,14 +4,12 @@ import (
 	"net/http"
 )
 
-// Handler ...
-type Handler func(*http.Request) *http.ResponseWriter
-
-//Route ...
+// Route ...
 type Route struct {
 	httpMethod string
 	locatePath string
-	handler    Handler
+	handler    http.Handler
+	err        error
 }
 
 //Routes Routes []Route
@@ -29,11 +27,20 @@ func (r *Route) LocatePath(locatePath string) *Route {
 	return r
 }
 
-// func (routes *Routes) RegisterUrl(method string, uri string, h http.HandleFunc) *Routes {
-// 	route := Route{}
-// 	route.LocatePath(uri).Method(method)
-// 	route.handler = h
+// Handler ...
+func (r *Route) Handler(handler http.Handler) *Route {
+	if r.err == nil {
+		r.handler = handler
+	}
+	return r
+}
 
-// 	*routes = append(*routes, route)
-// 	return routes
-// }
+// HandlerFunc sets a handler function for the route.
+func (r *Route) HandlerFunc(f func(http.ResponseWriter, *http.Request)) *Route {
+	return r.Handler(http.HandlerFunc(f))
+}
+
+// GetHandler ...
+func (r *Route) GetHandler() http.Handler {
+	return r.handler
+}
