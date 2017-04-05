@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"qrys"
+	mid "qrys/middleware"
 )
 
 // DemoServer request response
@@ -15,26 +16,30 @@ func DemoServer(w http.ResponseWriter, req *http.Request) {
 
 // Demo1Server request response
 func Demo1Server(w http.ResponseWriter, req *http.Request) {
-
-	fmt.Fprintf(w, "RequestURI:%s, method: %s", req.URL.RequestURI(), req.Method)
+	id := qrys.Vars(req)["id"]
+	fmt.Fprintf(w, "RequestURI:%s, method: %s, id: %s", req.URL.RequestURI(), req.Method, id)
 }
 
 // Demo2Server request response
 func Demo2Server(w http.ResponseWriter, req *http.Request) {
+	var jsonData interface{}
+	qrys.ParseBody(req, &jsonData)
+
+	fmt.Println(jsonData.(map[string]interface{})["key1"])
+	fmt.Println(jsonData.(map[string]interface{})["key2"])
 	fmt.Fprintf(w, "RequestURI:%s, method: %s", req.URL.RequestURI(), req.Method)
 }
 
 func main() {
-	s := new(qrys.MiddleWareServe)
+	s := new(mid.MiddleWareServe)
 	r := qrys.NewRouter()
 
 	r.GET("/", DemoServer)
-	r.GET("/a", Demo1Server)
-	r.GET("/a/a", Demo1Server)
+	r.GET("/a/:id", Demo1Server)
 	r.POST("/a", Demo2Server)
 
 	s.Handler = r
-	s.Use(qrys.Log, qrys.ErrCatch)
+	s.Use(mid.Log, mid.ErrCatch)
 
 	err := http.ListenAndServe(":8080", s)
 	if err != nil {
