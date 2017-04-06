@@ -24,11 +24,18 @@ func Demo1Server(w http.ResponseWriter, req *http.Request) {
 // Demo2Server request response
 func Demo2Server(w http.ResponseWriter, req *http.Request) {
 	var jsonData interface{}
+
 	qrys.ParseBody(req, &jsonData)
 	fmt.Println(jsonData.(map[string]interface{})["key1"])
 	fmt.Println(jsonData.(map[string]interface{})["key2"])
+
 	response := qrys.NewResponse()
 	response.Data = jsonData
+
+	headres := make(map[string]string)
+	headres["Authorization"] = "access_token"
+
+	response.SetHeaders(w, headres)
 	response.Set("is ok")
 	response.Write(w)
 }
@@ -39,7 +46,7 @@ func Demo3Server(w http.ResponseWriter, req *http.Request) {
 	qrys.ParseBody(req, &jsonData)
 	fmt.Println(jsonData.(map[string]interface{})["key1"])
 	fmt.Println(jsonData.(map[string]interface{})["key2"])
-	qrys.JSONBody(jsonData, w)
+	qrys.JSONBody(jsonData, 201, w)
 }
 
 func main() {

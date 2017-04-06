@@ -33,6 +33,13 @@ func (resp *Response) Set(msg string) {
 	resp.Message = msg
 }
 
+// SetHeaders ...
+func (resp *Response) SetHeaders(rw http.ResponseWriter, headers map[string]string) {
+	for k, v := range headers {
+		rw.Header().Add(k, v)
+	}
+}
+
 // Write json body
 func (resp *Response) Write(rw http.ResponseWriter) {
 	rw.Header().Set("Content-Type", "application/json")
@@ -40,7 +47,7 @@ func (resp *Response) Write(rw http.ResponseWriter) {
 
 	body, err := json.Marshal(resp)
 	if err != nil {
-		panic(err)
+		body, _ = json.Marshal(NewResponseWithError(err))
 	}
 	rw.Write(body)
 }

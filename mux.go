@@ -112,11 +112,12 @@ func ParseBody(req *http.Request, container *interface{}) error {
 }
 
 // JSONBody ...
-func JSONBody(data interface{}, rw http.ResponseWriter) {
+func JSONBody(data interface{}, code int, rw http.ResponseWriter) {
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(code)
 	body, err := json.Marshal(data)
 	if err != nil {
-		panic(err)
+		body, _ = json.Marshal(NewResponseWithError(err))
 	}
 	rw.Write(body)
 }
