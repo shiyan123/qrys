@@ -5,7 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/shiyan123/qrys"
+	"qrys"
+
 	mid "github.com/shiyan123/qrys/middleware"
 )
 
@@ -28,7 +29,10 @@ func Demo2Server(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Println(jsonData.(map[string]interface{})["key1"])
 	fmt.Println(jsonData.(map[string]interface{})["key2"])
-	fmt.Fprintf(w, "RequestURI:%s, method: %s", req.URL.RequestURI(), req.Method)
+	response := qrys.NewResponse()
+	response.Data = jsonData
+	response.Set("is ok")
+	response.Write(w)
 }
 
 func main() {
@@ -37,6 +41,7 @@ func main() {
 
 	r.GET("/", DemoServer)
 	r.GET("/a/:id", Demo1Server)
+	r.GET("/a/:id/*", Demo1Server)
 	r.POST("/a", Demo2Server)
 
 	s.Handler = r
