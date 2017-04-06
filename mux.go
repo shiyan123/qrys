@@ -111,6 +111,16 @@ func ParseBody(req *http.Request, container *interface{}) error {
 	return nil
 }
 
+// JSONBody ...
+func JSONBody(data interface{}, rw http.ResponseWriter) {
+	rw.Header().Set("Content-Type", "application/json")
+	body, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
+	rw.Write(body)
+}
+
 // Try ...
 func (h *Handler) Try(usegs []string) (bool, map[string]string) {
 	if len(h.patterns) != len(usegs) && !h.wild {

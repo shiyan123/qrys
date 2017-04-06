@@ -5,8 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"qrys"
-
+	"github.com/shiyan123/qrys"
 	mid "github.com/shiyan123/qrys/middleware"
 )
 
@@ -26,13 +25,21 @@ func Demo1Server(w http.ResponseWriter, req *http.Request) {
 func Demo2Server(w http.ResponseWriter, req *http.Request) {
 	var jsonData interface{}
 	qrys.ParseBody(req, &jsonData)
-
 	fmt.Println(jsonData.(map[string]interface{})["key1"])
 	fmt.Println(jsonData.(map[string]interface{})["key2"])
 	response := qrys.NewResponse()
 	response.Data = jsonData
 	response.Set("is ok")
 	response.Write(w)
+}
+
+// Demo3Server request response
+func Demo3Server(w http.ResponseWriter, req *http.Request) {
+	var jsonData interface{}
+	qrys.ParseBody(req, &jsonData)
+	fmt.Println(jsonData.(map[string]interface{})["key1"])
+	fmt.Println(jsonData.(map[string]interface{})["key2"])
+	qrys.JSONBody(jsonData, w)
 }
 
 func main() {
@@ -43,6 +50,7 @@ func main() {
 	r.GET("/a/:id", Demo1Server)
 	r.GET("/a/:id/*", Demo1Server)
 	r.POST("/a", Demo2Server)
+	r.POST("/b", Demo3Server)
 
 	s.Handler = r
 	s.Use(mid.Log, mid.ErrCatch)

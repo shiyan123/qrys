@@ -38,6 +38,9 @@ func (resp *Response) Write(rw http.ResponseWriter) {
 	rw.Header().Set("Content-Type", "application/json")
 	rw.WriteHeader(resp.Code)
 
-	body, _ := json.Marshal(resp)
+	body, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
 	rw.Write(body)
 }
