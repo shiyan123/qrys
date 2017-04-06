@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"qrys"
-	mid "qrys/middleware"
+
+	"github.com/shiyan123/qrys"
+	mid "github.com/shiyan123/qrys/middleware"
 )
 
 // DemoServer request response
