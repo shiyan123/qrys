@@ -5,7 +5,8 @@ golang:
     1.8
 
 # Go Report Card:
-    <img src="https://goreportcard.com/badge/github.com/shiyan123/qrys">
+![Go Report Card](https://goreportcard.com/badge/github.com/shiyan123/qrys)
 
 # Travis-ci
-    <img src="https://www.travis-ci.org/shiyan123/qrys.svg?branch=master">
+![Travis-ci](https://www.travis-ci.org/shiyan123/qrys.svg?branch=master)    
+
